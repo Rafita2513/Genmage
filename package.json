@@ -1,0 +1,12 @@
+{
+  "name": "genmage",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Saca los mejores momentos de un vídeo como fotos de alta calidad.",
+  "scripts": {
+    "test": "node --test \"tests/unit/*.test.js\"",
+    "serve": "npx --yes serve . -l 8080",
+    "e2e": "node tests/e2e/smoke.mjs"
+  }
+}
