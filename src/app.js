@@ -3,12 +3,14 @@ import { analyzeVideo } from './analyze.js';
 import { createSelection } from './selectionState.js';
 import { fileNameFor, saveToPhotos } from './share.js';
 import { renderCarousel, renderFallbackGrid } from './carousel.js';
+import { loadCropSetting, saveCropSetting } from './settings.js';
 
 const $ = (id) => document.getElementById(id);
 const screens = ['home', 'processing', 'results', 'fallback', 'error'];
 
 const input = $('video-input');
 const saveButton = $('save');
+const cropToggle = $('crop-toggle');
 const toast = $('toast');
 
 let video = null;
@@ -63,6 +65,9 @@ function onProgress(done, total) {
   $('progress-bar').value = percent;
 }
 
+cropToggle.checked = loadCropSetting();
+cropToggle.addEventListener('change', () => saveCropSetting(cropToggle.checked));
+
 input.addEventListener('change', async () => {
   const file = input.files?.[0];
   input.value = '';
@@ -80,7 +85,7 @@ input.addEventListener('change', async () => {
   try {
     opened = await openVideo(file);
     video = opened;
-    const result = await analyzeVideo(opened, { onProgress, signal });
+    const result = await analyzeVideo(opened, { onProgress, signal, cropBorders: cropToggle.checked });
     if (signal.aborted) return;
     snapshots = result;
     for (const snap of snapshots) urls.set(snap.id, URL.createObjectURL(snap.blob));

@@ -1,5 +1,5 @@
 // Sube CACHE_VERSION cada vez que cambie algún archivo de la app.
-const CACHE_VERSION = 'genmage-v1';
+const CACHE_VERSION = 'genmage-v2';
 const SHELL = [
   './',
   'index.html',
@@ -8,11 +8,13 @@ const SHELL = [
   'src/app.js',
   'src/analyze.js',
   'src/carousel.js',
+  'src/crop.js',
   'src/frames.js',
   'src/photoCount.js',
   'src/scoring.js',
   'src/selection.js',
   'src/selectionState.js',
+  'src/settings.js',
   'src/share.js',
   'icons/icon-192.png',
   'icons/icon-512.png',

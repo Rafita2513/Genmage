@@ -1,3 +1,5 @@
+import { toPixelRect } from './crop.js';
+
 export const ANALYSIS_WIDTH = 320;
 export const JPEG_QUALITY = 0.95;
 export const MAX_CANVAS_PIXELS = 16_000_000; // límite de área de canvas en iOS Safari
@@ -87,27 +89,40 @@ export async function openVideo(file) {
     await seeked;
   }
 
+  // Región del vídeo que se usa (todo el fotograma o el rectángulo recortado).
   const analysisCanvas = document.createElement('canvas');
-  analysisCanvas.width = ANALYSIS_WIDTH;
-  analysisCanvas.height = Math.max(1, Math.round((ANALYSIS_WIDTH * videoHeight) / videoWidth));
   const analysisCtx = analysisCanvas.getContext('2d', { willReadFrequently: true });
-
-  const fullSize = fitWithin(videoWidth, videoHeight, MAX_CANVAS_PIXELS);
   const fullCanvas = document.createElement('canvas');
-  fullCanvas.width = fullSize.width;
-  fullCanvas.height = fullSize.height;
   const fullCtx = fullCanvas.getContext('2d');
+  let region = toPixelRect(null, videoWidth, videoHeight);
+
+  function applyCrop(rect) {
+    region = toPixelRect(rect, videoWidth, videoHeight);
+    analysisCanvas.width = ANALYSIS_WIDTH;
+    analysisCanvas.height = Math.max(1, Math.round((ANALYSIS_WIDTH * region.sh) / region.sw));
+    const size = fitWithin(region.sw, region.sh, MAX_CANVAS_PIXELS);
+    fullCanvas.width = size.width;
+    fullCanvas.height = size.height;
+  }
+  applyCrop(null);
 
   return {
     duration,
-    width: fullSize.width,
-    height: fullSize.height,
+    get width() {
+      return fullCanvas.width;
+    },
+    get height() {
+      return fullCanvas.height;
+    },
     dispose,
+
+    /** Recorta las siguientes lecturas a un rectángulo normalizado (null = fotograma completo). */
+    setCrop: applyCrop,
 
     async grayAt(t) {
       await seekTo(t);
       const { width, height } = analysisCanvas;
-      analysisCtx.drawImage(video, 0, 0, width, height);
+      analysisCtx.drawImage(video, region.sx, region.sy, region.sw, region.sh, 0, 0, width, height);
       const rgba = analysisCtx.getImageData(0, 0, width, height).data;
       const data = new Uint8ClampedArray(width * height);
       for (let i = 0, p = 0; i < data.length; i++, p += 4) {
@@ -118,7 +133,9 @@ export async function openVideo(file) {
 
     async jpegAt(t) {
       await seekTo(t);
-      fullCtx.drawImage(video, 0, 0, fullCanvas.width, fullCanvas.height);
+      fullCtx.drawImage(
+        video, region.sx, region.sy, region.sw, region.sh, 0, 0, fullCanvas.width, fullCanvas.height,
+      );
       return new Promise((resolve, reject) => {
         fullCanvas.toBlob(
           (blob) => (blob ? resolve(blob) : reject(new Error('JPEG_FAILED'))),

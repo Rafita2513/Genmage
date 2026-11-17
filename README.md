@@ -9,6 +9,10 @@ PWA para iPhone: eliges un vídeo de tu galería, la app saca sus mejores moment
 
 10 por cada minuto de vídeo, redondeando hacia arriba (hasta 1:00 → 10, hasta 2:00 → 20…), con tope de 100 y como máximo una por segundo. La duración se redondea al segundo más cercano.
 
+## Recorte de bordes negros
+
+En la pantalla de inicio, la casilla **Recortar bordes negros** (activada por defecto) detecta las franjas negras de las grabaciones de pantalla y recorta las fotos a la zona útil. Si el vídeo no tiene franjas, no recorta nada. Desactívala para obtener siempre el fotograma completo.
+
 ## Probar en el PC
 
 ```bash
