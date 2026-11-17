@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Genmage</title>
+  <meta name="theme-color" content="#18181b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Genmage">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <section id="home" class="screen">
+      <div class="hero">
+        <h1>Genmage</h1>
+        <p>Elige un vídeo y quédate con sus mejores momentos como fotos.</p>
+      </div>
+      <label class="button primary" for="video-input">Elegir vídeo</label>
+      <input id="video-input" type="file" accept="video/*" hidden>
+      <p class="note">El vídeo no sale de tu teléfono.</p>
+    </section>
+
+    <section id="processing" class="screen" hidden>
+      <div class="hero">
+        <h2 id="progress-title">Analizando…</h2>
+        <p id="progress-detail">Preparando el vídeo</p>
+      </div>
+      <progress id="progress-bar" max="100" value="0"></progress>
+      <button id="cancel" class="button ghost" type="button">Cancelar</button>
+    </section>
+
+    <section id="results" class="screen" hidden>
+      <header class="bar">
+        <button id="back" class="button ghost" type="button">← Otro vídeo</button>
+      </header>
+      <div id="gallery"></div>
+      <p id="hint" class="note">Toca las fotos que quieres guardar.</p>
+      <button id="save" class="button primary" type="button" disabled>Guardar 0 fotos</button>
+      <p id="toast" role="status" hidden></p>
+    </section>
+
+    <section id="fallback" class="screen" hidden>
+      <header class="bar">
+        <button id="fallback-back" class="button ghost" type="button">← Volver al carrusel</button>
+      </header>
+      <p class="note">Este navegador no puede guardarlas de una vez.</p>
+      <div id="fallback-grid"></div>
+    </section>
+
+    <section id="error" class="screen" hidden>
+      <div class="hero">
+        <h2>No se pudo leer este vídeo</h2>
+        <p>Prueba con otro vídeo de tu galería.</p>
+      </div>
+      <button id="error-back" class="button primary" type="button">Volver</button>
+    </section>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
