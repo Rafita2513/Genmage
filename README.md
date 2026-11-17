@@ -37,7 +37,7 @@ La app es un sitio estático: basta subir esta carpeta (sin `node_modules`, `doc
 
 Cada vez que cambies un archivo de la app, sube `CACHE_VERSION` en `sw.js` para que los móviles descarguen la versión nueva.
 
-URL publicada (GitHub Pages, rama `main`): <https://rafita2513.github.io/genmage/>
+URL publicada (GitHub Pages, rama `main`): <https://rafita2513.github.io/Genmage/>
 
 ## Instalar en el iPhone y comprobarla
 
